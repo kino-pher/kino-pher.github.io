@@ -1,0 +1,24 @@
+{
+  "name": "kino-pher.github.io",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kino-pher/kino-pher.github.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kino-pher/kino-pher.github.io/issues"
+  },
+  "homepage": "https://github.com/kino-pher/kino-pher.github.io#readme",
+  "dependencies": {
+    "chart.js": "^4.4.7",
+    "ejs": "^3.1.10"
+  }
+}
