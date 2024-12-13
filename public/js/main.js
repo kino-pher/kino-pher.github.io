@@ -10,34 +10,26 @@ function calculate() {
         return;
     }
 
-    let balanceNoInterest = initialAmount;
-    let balanceWithInterest = initialAmount;
+    let balance = initialAmount;
     let months = 0;
-    let monthsWithInterest = 0;
-    let dataNoInterest = [initialAmount];
-    let dataWithInterest = [initialAmount];
+    let data = [initialAmount];
     let dates = [new Date()];
+    let targetMonth = 0;
 
-    // Calculate until both scenarios reach target
-    while (balanceNoInterest < targetAmount || balanceWithInterest < targetAmount) {
+    // Calculate until reaching target
+    while (balance < targetAmount) {
         months++;
         let currentDate = new Date();
         currentDate.setMonth(currentDate.getMonth() + months);
         dates.push(currentDate);
 
-        // No interest scenario
-        balanceNoInterest += monthlySavings;
-        dataNoInterest.push(balanceNoInterest);
+        balance += monthlySavings;
+        let interest = balance * interestRate;
+        balance += interest;
+        data.push(balance);
 
-        // With interest scenario
-        balanceWithInterest += monthlySavings;
-        let interest = balanceWithInterest * interestRate;
-        balanceWithInterest += interest;
-        dataWithInterest.push(balanceWithInterest);
-
-        // Record when target is first hit with interest
-        if (balanceWithInterest >= targetAmount && monthsWithInterest === 0) {
-            monthsWithInterest = months;
+        if (balance >= targetAmount && targetMonth === 0) {
+            targetMonth = months;
         }
     }
 
@@ -47,17 +39,17 @@ function calculate() {
         data: {
             labels: dates.map(date => date.toLocaleDateString()),
             datasets: [{
-                label: 'Without Interest',
-                data: dataNoInterest,
-                borderColor: 'rgb(54, 162, 235)',
-                backgroundColor: 'rgba(54, 162, 235, 0.1)',
-                fill: true
-            }, {
-                label: 'With Interest',
-                data: dataWithInterest,
+                label: 'Account Balance',
+                data: data,
                 borderColor: 'rgb(75, 192, 192)',
                 backgroundColor: 'rgba(75, 192, 192, 0.1)',
                 fill: true
+            }, {
+                label: 'Target Amount',
+                data: Array(dates.length).fill(targetAmount),
+                borderColor: 'rgb(255, 99, 132)',
+                borderDash: [5, 5],
+                fill: false
             }]
         },
         options: {
@@ -65,7 +57,7 @@ function calculate() {
             plugins: {
                 title: {
                     display: true,
-                    text: `Time to reach target: ${monthsWithInterest} months with interest, ${months} months without`
+                    text: `Months to reach target: ${targetMonth}`
                 },
                 tooltip: {
                     callbacks: {
@@ -109,14 +101,10 @@ function calculate() {
         }
     });
 
-    const targetDateWithInterest = new Date();
-    targetDateWithInterest.setMonth(targetDateWithInterest.getMonth() + monthsWithInterest);
-    
-    const targetDateNoInterest = new Date();
-    targetDateNoInterest.setMonth(targetDateNoInterest.getMonth() + months);
+    const targetDate = new Date();
+    targetDate.setMonth(targetDate.getMonth() + targetMonth);
 
     alert(
-        `With interest, you'll reach your goal of ${new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}).format(targetAmount)} by ${targetDateWithInterest.toLocaleDateString()}.\n` +
-        `Without interest, it would take until ${targetDateNoInterest.toLocaleDateString()}.`
+        `You'll reach your goal of ${new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}).format(targetAmount)} by ${targetDate.toLocaleDateString()}.`
     );
 }
